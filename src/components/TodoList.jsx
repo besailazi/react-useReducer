@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useReducer } from 'react'
+import styles from './TodoList.module.css'
 
 const TodoList = () => {
 	const [inputValue, setInputValue] = useState('')
@@ -29,6 +30,8 @@ const TodoList = () => {
 
 	const handleSubmit = (e)=>{
       e.preventDefault();
+		dispatch({type: 'ADD_TODO', payload: inputValue})
+		setInputValue("")
 	}
 
 	const [todos, dispatch] = useReducer(reducer, [])
@@ -38,14 +41,13 @@ const TodoList = () => {
 	 <>
 	 <h1>Todo list</h1>
 	 <form onSubmit={handleSubmit}>
-		<input onChange={(e)=>setInputValue(e.target.value)}type="text" />
-		<button onClick={()=>dispatch({type: 'ADD_TODO', payload: inputValue})}>
-			Add todo</button>
+		<input onChange={(e)=>setInputValue(e.target.value)}type="text" value={inputValue} />
+		<button>Add todo</button>
 	 </form>
 	 <ul>
 		{
 			todos.map((todo)=>{
-           return <li key={todo.id}><input type="checkbox" 
+           return <li key={todo.id} className={todo.isCompleted ? styles.todoCompleted: styles.todo}><input type="checkbox" 
 			  onChange={()=>dispatch({type: 'CHECK', payload: todo.id})}/>
 			  {todo.title}
 			  </li>
@@ -55,6 +57,6 @@ const TodoList = () => {
 	 <button onClick={()=>dispatch({type: 'RESET'})}>Reset</button>
 	 </>
   )
-}
+	}
 
 export default TodoList
